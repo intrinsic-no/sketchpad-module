@@ -28,7 +28,7 @@
 <script>
 import { getStroke } from 'perfect-freehand';
 import Canvg from 'canvg';
-import { getSvgPathFromStroke } from 'utils';
+import { getSvgPathFromStroke } from '@intrinsic-no/sketchpad/src/utils';
 
 export default {
     props: {
