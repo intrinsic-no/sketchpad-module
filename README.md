@@ -12,10 +12,7 @@ Each touch/swipe is added as a new path to the SVG, which gives you the ability 
 
 ```vue
 <template>
-    <Sketchpad
-        ref="pad"
-        v-model="paths"
-    />
+    <Sketchpad v-model="paths" />
 </template>
 <script>
 import Sketchpad from '@intrinsic-no/sketchpad';

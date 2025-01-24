@@ -1,7 +1,7 @@
 <template>
     <svg
         ref="canvas"
-        class="fit zketchpad block"
+        class="fit intrinsic-sketchpad block"
         @mousedown="handlePointerDown"
         @mousemove="handlePointerMove"
         @mouseup="handlePointerUp"
@@ -69,9 +69,9 @@ export default {
     computed: {
         allOptions() {
             return {
-                size: 4,
-                thinning: 0.5,
-                smoothing: 0.5,
+                size: 3,
+                thinning: 0.33,
+                smoothing: 0.2,
                 streamline: 0.5,
                 easing: t => t,
                 start: {
@@ -123,18 +123,6 @@ export default {
                 }
             },
         },
-    },
-
-    mounted() {
-        this.$refs.canvas.addEventListener('touchstart', this.handleTouchDown, { passive: false });
-        this.$refs.canvas.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-        this.$refs.canvas.addEventListener('touchend', this.handleTouchUp, { passive: false });
-    },
-
-    beforeUnmount() {
-        this.$refs.canvas.removeEventListener('touchstart', this.handleTouchDown);
-        this.$refs.canvas.removeEventListener('touchmove', this.handleTouchMove);
-        this.$refs.canvas.removeEventListener('touchend', this.handleTouchUp);
     },
 
     methods: {
@@ -271,7 +259,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.zketchpad
+.intrinsic-sketchpad
     touch-action: none
     user-select: none
     -webkit-user-select: none
