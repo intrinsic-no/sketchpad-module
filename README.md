@@ -18,7 +18,7 @@ Each touch/swipe is added as a new path to the SVG, which gives you the ability 
     />
 </template>
 <script>
-import Sketchpad from '@intrinsic-no/sketchpad-module';
+import Sketchpad from '@intrinsic-no/sketchpad';
 
 export default {
     components: { Sketchpad },
