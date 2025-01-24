@@ -1,32 +1,36 @@
 <template>
-    <svg ref="canvas"
-         class="fit block zketchpad"
-         @mousedown="handlePointerDown"
-         @mousemove="handlePointerMove"
-         @mouseup="handlePointerUp"
-         @mouseleave="handlePointerLeave"
-         @touchstart="handleTouchDown"
-         @touchmove="handleTouchMove"
-         @touchend="handleTouchUp"
-         @touchcancel="handleTouchUp">
-        <path v-for="(path, index) in pathsWithData"
-              :key="`path${index}`"
-              :d="path.path"
-              :fill="path.color" />
+    <svg
+        ref="canvas"
+        class="fit zketchpad block"
+        @mousedown="handlePointerDown"
+        @mousemove="handlePointerMove"
+        @mouseup="handlePointerUp"
+        @mouseleave="handlePointerLeave"
+        @touchstart="handleTouchDown"
+        @touchmove="handleTouchMove"
+        @touchend="handleTouchUp"
+        @touchcancel="handleTouchUp"
+    >
+        <path
+            v-for="(path, index) in pathsWithData"
+            :key="`path${index}`"
+            :d="path.path"
+            :fill="path.color"
+        />
 
-        <path :d="pathData"
-              :fill="color" />
+        <path
+            :d="pathData"
+            :fill="color"
+        />
     </svg>
 </template>
 
 <script>
 import { getStroke } from 'perfect-freehand';
 import Canvg from 'canvg';
-import { getSvgPathFromStroke } from 'vue-zketchpad/src/utils';
+import { getSvgPathFromStroke } from 'utils';
 
 export default {
-    emits: ['update:modelValue'],
-
     props: {
         readonly: {
             type: Boolean,
@@ -53,6 +57,7 @@ export default {
             },
         },
     },
+    emits: ['update:modelValue'],
 
     data() {
         return {
@@ -92,15 +97,44 @@ export default {
         },
 
         pathsWithData() {
-            return JSON.parse(JSON.stringify(this.paths))
-                .map(points => {
-                    points.path = getSvgPathFromStroke(
-                        getStroke(points.path, this.allOptions),
-                    );
+            return JSON.parse(JSON.stringify(this.paths)).map(points => {
+                points.path = getSvgPathFromStroke(getStroke(points.path, this.allOptions));
 
-                    return points;
-                });
+                return points;
+            });
         },
+    },
+
+    watch: {
+        paths: {
+            deep: true,
+            handler(value) {
+                if (this.wasUpdated(value, this.modelValue)) {
+                    this.$emit('update:modelValue', value);
+                }
+            },
+        },
+
+        modelValue: {
+            deep: true,
+            handler(value) {
+                if (this.wasUpdated(value, this.paths)) {
+                    this.paths = value;
+                }
+            },
+        },
+    },
+
+    mounted() {
+        this.$refs.canvas.addEventListener('touchstart', this.handleTouchDown, { passive: false });
+        this.$refs.canvas.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+        this.$refs.canvas.addEventListener('touchend', this.handleTouchUp, { passive: false });
+    },
+
+    beforeUnmount() {
+        this.$refs.canvas.removeEventListener('touchstart', this.handleTouchDown);
+        this.$refs.canvas.removeEventListener('touchmove', this.handleTouchMove);
+        this.$refs.canvas.removeEventListener('touchend', this.handleTouchUp);
     },
 
     methods: {
@@ -133,9 +167,7 @@ export default {
                 return;
             }
 
-            this.points = [
-                [this.getCanvasX(e), this.getCanvasY(e), e.pressure],
-            ];
+            this.points = [[this.getCanvasX(e), this.getCanvasY(e), e.pressure]];
         },
 
         handlePointerMove(e) {
@@ -147,10 +179,7 @@ export default {
                 return;
             }
 
-            this.points = [
-                ...this.points,
-                [this.getCanvasX(e), this.getCanvasY(e), e.pressure],
-            ];
+            this.points = [...this.points, [this.getCanvasX(e), this.getCanvasY(e), e.pressure]];
         },
 
         handlePointerUp() {
@@ -181,9 +210,7 @@ export default {
 
             e.preventDefault();
 
-            this.points = [
-                [this.getCanvasX(e, 'touch'), this.getCanvasY(e, 'touch'), e.pressure],
-            ];
+            this.points = [[this.getCanvasX(e, 'touch'), this.getCanvasY(e, 'touch'), e.pressure]];
         },
 
         handleTouchMove(e) {
@@ -240,38 +267,6 @@ export default {
             return JSON.stringify(newVal) !== JSON.stringify(oldVal);
         },
     },
-
-    watch: {
-        paths: {
-            deep: true,
-            handler(value) {
-                if (this.wasUpdated(value, this.modelValue)) {
-                    this.$emit('update:modelValue', value);
-                }
-            },
-        },
-
-        modelValue: {
-            deep: true,
-            handler(value) {
-                if (this.wasUpdated(value, this.paths)) {
-                    this.paths = value;
-                }
-            },
-        },
-    },
-
-    mounted() {
-        this.$refs.canvas.addEventListener('touchstart', this.handleTouchDown, { passive: false });
-        this.$refs.canvas.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-        this.$refs.canvas.addEventListener('touchend', this.handleTouchUp, { passive: false });
-    },
-
-    beforeDestroy() {
-        this.$refs.canvas.removeEventListener('touchstart', this.handleTouchDown);
-        this.$refs.canvas.removeEventListener('touchmove', this.handleTouchMove);
-        this.$refs.canvas.removeEventListener('touchend', this.handleTouchUp);
-    }
 };
 </script>
 
