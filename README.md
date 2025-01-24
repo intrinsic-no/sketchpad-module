@@ -1,4 +1,4 @@
-# Vue Sketchpad
+# Sketchpad Module
 
 Vue3 wrapper around the [Perfect Freehand library](https://github.com/steveruizok/perfect-freehand).
 
@@ -11,23 +11,24 @@ Each touch/swipe is added as a new path to the SVG, which gives you the ability 
 ### Basic example
 
 ```vue
-
 <template>
-    <Sketchpad ref="pad"
-               v-model="paths" />
+    <Sketchpad
+        ref="pad"
+        v-model="paths"
+    />
 </template>
 <script>
-    import Sketchpad from "@intrinsic-no/vue-sketchpad";
+import Sketchpad from '@intrinsic-no/sketchpad-module';
 
-    export default {
-        components: { Sketchpad },
+export default {
+    components: { Sketchpad },
 
-        data() {
-            return {
-                paths: []
-            }
-        }
-    }
+    data() {
+        return {
+            paths: [],
+        };
+    },
+};
 </script>
 ```
 
@@ -36,22 +37,22 @@ an `options` object to the component. This will merge with the component default
 
 ```js
 export default {
-    size: 4,
-    thinning: 0.5,
-    smoothing: 0.5,
+    size: 3,
+    thinning: 0.33,
+    smoothing: 0.2,
     streamline: 0.5,
-    easing: (t) => t,
+    easing: t => t,
     start: {
         taper: 0,
-        easing: (t) => t,
-        cap: true
+        easing: t => t,
+        cap: true,
     },
     end: {
         taper: 0,
-        easing: (t) => t,
-        cap: true
+        easing: t => t,
+        cap: true,
     },
-}
+};
 ```
 
 To change the color of the next path you're writing you can add a `color` prop to the component. This needs to a
@@ -65,5 +66,5 @@ with a Base64 encoded image string.
 ```js
 this.$pad.export().then(imageString => {
     // do something with imageString
-})
+});
 ```
