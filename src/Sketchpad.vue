@@ -109,18 +109,14 @@ export default {
         paths: {
             deep: true,
             handler(value) {
-                if (this.wasUpdated(value, this.modelValue)) {
-                    this.$emit('update:modelValue', value);
-                }
+                this.$emit('update:modelValue', value);
             },
         },
 
         modelValue: {
             deep: true,
             handler(value) {
-                if (this.wasUpdated(value, this.paths)) {
-                    this.paths = value;
-                }
+                this.paths = value;
             },
         },
     },
@@ -236,6 +232,14 @@ export default {
             }
 
             this.paths = [];
+        },
+
+        undo() {
+            if (this.readonly) {
+                return;
+            }
+
+            this.paths.pop();
         },
 
         async export() {

@@ -12,7 +12,10 @@ Each touch/swipe is added as a new path to the SVG, which gives you the ability 
 
 ```vue
 <template>
-    <Sketchpad v-model="paths" />
+    <Sketchpad
+        ref="sketchpad"
+        v-model="paths"
+    />
 </template>
 <script>
 import Sketchpad from '@intrinsic-no/sketchpad';
@@ -61,7 +64,7 @@ To export the contents of your sketchpad you may call the `export` method on the
 with a Base64 encoded image string.
 
 ```js
-this.$pad.export().then(imageString => {
+this.$refs.sketchpad.export().then(imageString => {
     // do something with imageString
 });
 ```
