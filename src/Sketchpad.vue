@@ -50,6 +50,14 @@ export default {
                 return {};
             },
         },
+        width: {
+            type: Number,
+            default: 100,
+        },
+        height: {
+            type: Number,
+            default: 100,
+        },
         modelValue: {
             type: Array,
             default() {
@@ -245,7 +253,7 @@ export default {
         async export() {
             const preset = presets.offscreen();
 
-            const canvas = new OffscreenCanvas(700, 250);
+            const canvas = new OffscreenCanvas(this.width, this.height);
             const ctx = canvas.getContext('2d');
             const item = await Canvg.from(ctx, this.$refs.canvas.outerHTML, preset);
 
