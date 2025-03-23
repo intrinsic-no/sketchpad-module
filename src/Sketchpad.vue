@@ -27,7 +27,7 @@
 
 <script>
 import { getStroke } from 'perfect-freehand';
-import { Canvg } from 'canvg';
+import { Canvg, presets } from 'canvg';
 import { getSvgPathFromStroke } from '@intrinsic-no/sketchpad/src/utils';
 
 export default {
@@ -243,20 +243,22 @@ export default {
         },
 
         async export() {
-            const canvas = document.createElement('canvas');
+            const preset = presets.offscreen();
+
+            const canvas = new OffscreenCanvas(700, 250);
             const ctx = canvas.getContext('2d');
-
-            canvas.width = this.$refs.canvas.clientWidth;
-            canvas.height = this.$refs.canvas.clientHeight;
-
-            const item = await Canvg.fromString(ctx, this.$refs.canvas.outerHTML);
+            const item = await Canvg.from(ctx, this.$refs.canvas.outerHTML, preset);
 
             item.start();
-            return canvas.toDataURL();
-        },
 
-        wasUpdated(newVal, oldVal) {
-            return JSON.stringify(newVal) !== JSON.stringify(oldVal);
+            const blob = await canvas.convertToBlob();
+
+            return new Promise(resolve => {
+                const reader = new FileReader();
+
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
         },
     },
 };

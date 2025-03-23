@@ -1,6 +1,6 @@
 {
     "name": "@intrinsic-no/sketchpad",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "type": "module",
     "main": "src/Sketchpad.vue",
     "repository": "https://github.com/intrinsic-no/sketchpad-module.git",
